@@ -121,7 +121,3 @@ This project is open-source and available under the [MIT License](LICENSE).
 * Inspired by modern invoicing needs for freelancers and entrepreneurs
 * UI/UX based on common best practices
 * Thanks to the open-source community
-
----
-
-Let me know if you'd like me to generate a version with markdown formatting already applied or to include badges (like Netlify deploy, license, etc.).

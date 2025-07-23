@@ -3,61 +3,31 @@ import { toast } from 'react-toastify';
 
 export const sendInvoiceEmail = async (invoice) => {
   const {
-    billFrom,
-    billTo,
-    invoiceDate,
-    total,
-    status,
-    notes,
-    invoiceId,
-    recipientEmail,
-    logo,
-    items = [],
+    billFrom = '',
+    billTo = '',
+    invoiceDate = '',
+    total = '',
+    status = '',
+    notes = '',
+    invoiceId = '',
+    recipientEmail = '',
   } = invoice;
 
-  // Generate plain HTML table rows without inline styles
-  const itemsTableRows = items
-    .map(
-      (item) => `
-      <tr>
-        <td>${item.description}</td>
-        <td>${item.quantity}</td>
-        <td>₦${Number(item.price).toFixed(2)}</td>
-        <td>₦${(item.quantity * item.price).toFixed(2)}</td>
-      </tr>`
-    )
-    .join('');
-
-  const itemsTable = `
-    <table>
-      <thead>
-        <tr>
-          <th>Description</th>
-          <th>Qty</th>
-          <th>Price</th>
-          <th>Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${itemsTableRows}
-      </tbody>
-    </table>`;
+  const emailParams = {
+    recipient_email: String(recipientEmail || ''),
+    bill_from: String(billFrom || ''),
+    bill_to: String(billTo || ''),
+    invoice_date: String(invoiceDate || ''),
+    total: String(total || ''),
+    status: String(status || ''),
+    notes: notes ? String(notes).slice(0, 1000) : '', // trim long notes
+  };
 
   try {
     const result = await emailjs.send(
       import.meta.env.VITE_EMAILJS_SERVICE_ID,
       import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-      {
-        bill_from: billFrom,
-        bill_to: billTo,
-        invoice_date: invoiceDate,
-        status,
-        total,
-        notes,
-        recipient_email: recipientEmail,
-        invoice_link: `${import.meta.env.VITE_APP_URL}/invoice/${invoiceId}`,
-        items_table: itemsTable,
-      },
+      emailParams,
       import.meta.env.VITE_EMAILJS_PUBLIC_KEY
     );
 
